@@ -1,0 +1,58 @@
+{
+    "routes": [
+        {
+            "config": {
+                "description": "This renders the plugins home page",
+                "policies": []
+            },
+            "handler": "sms77.index",
+            "method": "GET",
+            "path": "/"
+        },
+        {
+            "config": {
+                "description": "This returns the bulk filters",
+                "policies": []
+            },
+            "handler": "sms77.bulkFilters",
+            "method": "GET",
+            "path": "/bulk-filters"
+        },
+        {
+            "config": {
+                "description": "This gets the plugin settings",
+                "policies": []
+            },
+            "handler": "sms77.getSettings",
+            "method": "GET",
+            "path": "/plugin-settings"
+        },
+        {
+            "config": {
+                "description": "This sets the plugin settings",
+                "policies": []
+            },
+            "handler": "sms77.setSettings",
+            "method": "POST",
+            "path": "/plugin-settings"
+        },
+        {
+            "config": {
+                "description": "Get the email settings",
+                "policies": []
+            },
+            "handler": "sms77.viewSettings",
+            "method": "GET",
+            "path": "/settings"
+        },
+        {
+            "config": {
+                "description": "Send SMS",
+                "policies": []
+            },
+            "handler": "sms77.sendSMS",
+            "method": "POST",
+            "path": "/sms"
+        }
+    ]
+}
