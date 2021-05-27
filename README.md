@@ -4,7 +4,7 @@
 ## Prerequisites
 - An API key from Sms77.io - [get one for free](https://app.sms77.io/anmelden)
 - [Roles & Permissions plugin](https://strapi.io/documentation/developer-docs/latest/development/plugins/users-permissions.html)
-- Field `phone_number` on collection `users-permissions_user` (see [screenshots](/._screenshots)) (can be changed by setting process.env.SMS77_STRAPI_PHONE_ATTRIBUTE)
+- Field `mobile_phone` on collection `users-permissions_user` (see [screenshots](/._screenshots)) (can be changed by setting process.env.SMS77_STRAPI_PHONE_ATTRIBUTE)
 
 ### Installation via NPM
 
