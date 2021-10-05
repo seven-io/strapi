@@ -1,6 +1,6 @@
 module.exports = {
     defaultFilters: {
-        roles: [],
+        role: '',
     },
     defaultSettings: {
         apiKey: '',
@@ -18,11 +18,19 @@ module.exports = {
         to: '',
         ttl: null,
     },
+    defaultVoiceParams: {
+        debug: false,
+        from: '',
+        text: '',
+        to: '',
+        xml: false,
+    },
     routes: {
-        Index: '/sms77',
         BulkFilters: '/sms77/bulk-filters',
+        Index: '/sms77',
         PluginSettings: '/sms77/plugin-settings',
         Sms: '/sms77/sms',
+        Voice: '/sms77/voice',
     },
     phoneAttribute: process.env.SMS77_STRAPI_PHONE_ATTRIBUTE || 'mobile_phone',
     settingsKeys: {

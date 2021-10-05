@@ -53,6 +53,15 @@
             "handler": "sms77.sendSMS",
             "method": "POST",
             "path": "/sms"
+        },
+        {
+            "config": {
+                "description": "Make text-to-speech calls",
+                "policies": []
+            },
+            "handler": "sms77.sendVoice",
+            "method": "POST",
+            "path": "/voice"
         }
     ]
 }

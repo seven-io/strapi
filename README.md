@@ -1,5 +1,8 @@
 ![Sms77.io Logo](https://www.sms77.io/wp-content/uploads/2019/07/sms77-Logo-400x79.png "Sms77.io Logo")
+
 # Official package for [strapi](https://strapi.io/)
+
+Send SMS and make Text-to-Speech calls
 
 ## Prerequisites
 - An API key from Sms77.io - [get one for free](https://app.sms77.io/anmelden)
@@ -16,4 +19,4 @@
 
 Need help? Feel free to [contact us](https://www.sms77.io/en/company/contact/).
 
-[![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](./LICENSE)
+[![MIT](https://img.shields.io/badge/License-MIT-teal.svg)](LICENSE)

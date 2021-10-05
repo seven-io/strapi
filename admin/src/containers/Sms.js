@@ -1,57 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {
-    Flex,
-    InputNumber,
-    InputText,
-    Label,
-    Select,
-    Textarea,
-    Toggle,
-} from '@buffetjs/core';
-import {Tooltip} from '@buffetjs/styles';
-import {DateTime, Header} from '@buffetjs/custom';
-import {request} from 'strapi-helper-plugin';
-import {defaultFilters, defaultSmsParams, routes} from '../../../constants';
+import React, {useState} from 'react'
+import {Flex, InputNumber, InputText, Label, Textarea, Toggle,} from '@buffetjs/core'
+import {Tooltip} from '@buffetjs/styles'
+import {DateTime, Header} from '@buffetjs/custom'
 import {
     FOREIGN_ID_MAX_LENGTH,
     FROM_NUMERIC_MAX,
     LABEL_MAX_LENGTH
-} from 'sms77-client/dist/validators/request/sms';
-import {toLocaleTimestamp} from '../../../utils';
+} from 'sms77-client/dist/validators/request/sms'
+import Util from '../../../Util'
+import {Debug} from './Debug'
+import {defaultFilters, defaultSmsParams, routes} from '../../../constants'
+import Filters from './Filters'
+import {AdminUtil} from '../AdminUtil'
 
 export default function Sms() {
-    const [params, setParams] = useState(defaultSmsParams);
-    const [filters, setFilters] = useState(defaultFilters);
-    const [filterValues, setFilterValues] = useState(defaultFilters);
-
-    useEffect(() => {
-        (async () => {
-            strapi.lockApp();
-
-            setFilterValues(await request(routes.BulkFilters));
-
-            strapi.unlockApp();
-        })();
-    }, []);
+    const [params, setParams] = useState(defaultSmsParams)
+    const [filters, setFilters] = useState(defaultFilters)
 
     const handleSubmit = async () => {
-        strapi.lockApp();
-
-        const body = {filters, params};
-
-        if (params.delay) {
-            body.params.delay = toLocaleTimestamp(params.delay._d);
-        }
-
-        const {message} = await request(routes.Sms, {
-            body,
-            method: 'POST',
-        });
-
-        strapi.unlockApp();
-
-        strapi.notification.toggle({message: JSON.stringify(message)});
-    };
+        if (params.delay) params.delay = Util.toLocaleTimestamp(params.delay._d)
+        await AdminUtil.handleSubmitMessage(routes.Sms, {filters, params})
+    }
 
     return <>
         <Header
@@ -62,28 +31,11 @@ export default function Sms() {
                     onClick: handleSubmit,
                 },
             ]}
-            title={{label: 'Sms77 SMS'}}
-            content='Send SMS via sms77.io SMS gateway.'
+            title={{label: 'SMS'}}
+            content='Send SMS via the sms77.io SMS gateway.'
         />
 
-        <section>
-            <h2>
-                Filters - <small>not applied if field "To" is set.</small>
-            </h2>
-
-            <Label htmlFor='filter_role'>Role</Label>
-            <Select
-                disabled={'' !== params.to}
-                id='filter_role'
-                name='filter_role'
-                onChange={({target: {value}}) =>
-                    setFilters({...filters, roles: value ? [value] : []})}
-                options={filterValues.roles}
-                value={filters.roles}
-            />
-
-            <hr/>
-        </section>
+        <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters}/>
 
         <div data-for='to_tooltip'
              data-tip='Recipient number(s) – accepts numbers and address book entries (groups and contacts). Multiple recipients can be specified separated by commas'>
@@ -158,24 +110,14 @@ export default function Sms() {
                     onChange={e => {
 
 
-                        setParams({...params, delay: e.target.value});
+                        setParams({...params, delay: e.target.value})
                     }}
                     value={params.delay}
                 />
                 <Tooltip id='delay_tooltip'/>
             </div>
 
-            <div data-for='debug_tooltip'
-                 data-tip='No SMS will be sent or calculated ir activated'>
-                <Label htmlFor='debug'>Debug</Label>
-                <Toggle
-                    id='debug'
-                    name='debug'
-                    onChange={e => setParams({...params, debug: e.target.value})}
-                    value={params.debug}
-                />
-                <Tooltip id='debug_tooltip'/>
-            </div>
+            <Debug params={params} setParams={setParams}/>
 
             <div data-for='flash_tooltip'
                  data-tip='Send Flash SMS directly displayed in the receivers display'>
@@ -226,5 +168,5 @@ export default function Sms() {
             required
             value={params.text}
         />
-    </>;
+    </>
 }

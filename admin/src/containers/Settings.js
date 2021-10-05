@@ -40,13 +40,17 @@ export default () => { // TODO: wrap back in memo?!
                     onClick: () => window.location = `/admin/plugins${routes.Sms}`,
                 },
                 {
+                    label: 'Voice',
+                    onClick: () => window.location = `/admin/plugins${routes.Voice}`,
+                },
+                {
                     color: 'success',
                     label: 'Save',
                     onClick: handleSubmit,
                 },
             ]}
-            content='Bulk messaging via Sms77 - a Germany based SMS provider established in 2003'
-            title={{label: 'Sms77 Settings'}}
+            content='Bulk messaging via sms77 - a Germany based SMS provider established in 2003'
+            title={{label: 'sms77 Settings'}}
         />
 
         <Label htmlFor='apiKey'>API Key</Label>

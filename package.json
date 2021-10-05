@@ -9,10 +9,10 @@
         "url": "https://github.com/sms77io/strapi/issues"
     },
     "dependencies": {
-        "node-fetch": "^2.6.1",
-        "sms77-client": "^2.11.1"
+        "node-fetch": "^2.6.5",
+        "sms77-client": "^2.12.1"
     },
-    "description": "Strapi plugin for sending SMS via Sms77.",
+    "description": "Strapi plugin for sending SMS and making text-to-speech calls via sms77.",
     "engines": {
         "node": ">=10.16.0 <=14.x.x",
         "npm": ">=6.0.0"
@@ -38,10 +38,10 @@
         "url": "git+https://github.com/sms77io/strapi.git"
     },
     "strapi": {
-        "description": "Send SMS via Sms77.",
+        "description": "Send SMS and make text-to-speech calls via sms77.",
         "icon": "plug",
         "name": "sms77",
         "required": false
     },
-    "version": "0.0.1"
+    "version": "0.1.0"
 }
