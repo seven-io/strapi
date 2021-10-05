@@ -5,6 +5,8 @@ import Initializer from './containers/Initializer';
 import trads from './translations';
 import {routes} from '../../constants';
 
+export const pluginId = 'sms77'
+
 const icon = pkg.strapi.icon;
 const name = pkg.strapi.name;
 
@@ -13,7 +15,7 @@ export default strapi => strapi.registerPlugin({
     blockerComponentProps: {},
     description: pkg.strapi.description || pkg.description,
     icon,
-    id: 'sms77',
+    id: pluginId,
     initializer: Initializer,
     injectedComponents: [],
     isReady: false,

@@ -1,36 +1,41 @@
-import React, {useEffect, useState} from 'react';
-import {InputText, Label} from '@buffetjs/core';
-import {Header} from '@buffetjs/custom';
-import {request} from 'strapi-helper-plugin';
-import {defaultSettings, routes} from '../../../constants';
+import React, {useEffect, useState} from 'react'
+import {useIntl} from 'react-intl'
+import {InputText, Label} from '@buffetjs/core'
+import {Header} from '@buffetjs/custom'
+import {request} from 'strapi-helper-plugin'
+import {defaultSettings, routes} from '../../../constants'
+import getTrad from '../utils/getTrad'
 
 export default () => { // TODO: wrap back in memo?!
-    const [settings, setSettings] = useState(defaultSettings);
+    const {formatMessage} = useIntl()
+    const [settings, setSettings] = useState(defaultSettings)
 
     useEffect(() => {
         (async () => {
-            strapi.lockApp();
+            strapi.lockApp()
 
-            setSettings(await request(routes.PluginSettings));
+            setSettings(await request(routes.PluginSettings))
 
-            strapi.unlockApp();
-        })();
-    }, []);
+            strapi.unlockApp()
+        })()
+    }, [])
 
     const handleSubmit = async () => {
-        strapi.lockApp();
+        strapi.lockApp()
 
         const _settings = await request(routes.PluginSettings, {
             body: settings,
             method: 'POST',
-        });
+        })
 
-        setSettings(_settings);
+        setSettings(_settings)
 
-        strapi.unlockApp();
+        strapi.unlockApp()
 
-        strapi.notification.toggle({message: 'Settings Updated!'});
-    };
+        strapi.notification.toggle({
+            message: formatMessage({id: getTrad('settings.updated')})
+        })
+    }
 
     return <>
         <Header
@@ -49,11 +54,11 @@ export default () => { // TODO: wrap back in memo?!
                     onClick: handleSubmit,
                 },
             ]}
-            content='Bulk messaging via sms77 - a Germany based SMS provider established in 2003'
-            title={{label: 'sms77 Settings'}}
+            content={formatMessage({id: getTrad('settings.helper')})}
+            title={{label: `sms77 ${formatMessage({id: getTrad('settings')})}`}}
         />
 
-        <Label htmlFor='apiKey'>API Key</Label>
+        <Label htmlFor='apiKey'>{formatMessage({id: getTrad('apiKey')})}</Label>
         <InputText
             id='apiKey'
             maxlength={90}
@@ -61,5 +66,5 @@ export default () => { // TODO: wrap back in memo?!
             onChange={e => setSettings({...settings, apiKey: e.target.value})}
             value={settings.apiKey}
         />
-    </>;
+    </>
 };

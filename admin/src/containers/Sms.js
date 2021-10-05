@@ -1,19 +1,24 @@
 import React, {useState} from 'react'
-import {Flex, InputNumber, InputText, Label, Textarea, Toggle,} from '@buffetjs/core'
+import {useIntl} from 'react-intl'
+import {Flex, InputNumber, InputText, Label, Toggle,} from '@buffetjs/core'
 import {Tooltip} from '@buffetjs/styles'
 import {DateTime, Header} from '@buffetjs/custom'
 import {
     FOREIGN_ID_MAX_LENGTH,
-    FROM_NUMERIC_MAX,
     LABEL_MAX_LENGTH
 } from 'sms77-client/dist/validators/request/sms'
 import Util from '../../../Util'
-import {Debug} from './Debug'
+import {Debug} from '../components/Debug'
 import {defaultFilters, defaultSmsParams, routes} from '../../../constants'
-import Filters from './Filters'
+import Filters from '../components/Filters'
 import {AdminUtil} from '../AdminUtil'
+import getTrad from '../utils/getTrad'
+import {To} from '../components/To'
+import {From} from '../components/From'
+import {Text} from '../components/Text'
 
 export default function Sms() {
+    const {formatMessage} = useIntl()
     const [params, setParams] = useState(defaultSmsParams)
     const [filters, setFilters] = useState(defaultFilters)
 
@@ -27,44 +32,24 @@ export default function Sms() {
             actions={[
                 {
                     color: 'success',
-                    label: 'Send',
+                    label: formatMessage({id: getTrad('send')}),
                     onClick: handleSubmit,
                 },
             ]}
+            content={formatMessage({id: getTrad('sms.helper')})}
             title={{label: 'SMS'}}
-            content='Send SMS via the sms77.io SMS gateway.'
         />
 
         <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters}/>
 
-        <div data-for='to_tooltip'
-             data-tip='Recipient number(s) – accepts numbers and address book entries (groups and contacts). Multiple recipients can be specified separated by commas'>
-            <Label htmlFor='to'>To</Label>
-            <InputText
-                id='to'
-                name='to'
-                onChange={e => setParams({...params, to: e.target.value})}
-                value={params.to}
-            />
-            <Tooltip id='to_tooltip'/>
-        </div>
+        <To params={params} setParams={setParams}/>
 
-        <div data-for='from_tooltip'
-             data-tip='Sender number. It may contain a maximum of 11 alphanumeric or 16 numeric characters'>
-            <Label htmlFor='from'>From</Label>
-            <InputText
-                id='from'
-                maxlength={FROM_NUMERIC_MAX}
-                name='from'
-                onChange={e => setParams({...params, from: e.target.value})}
-                value={params.from}
-            />
-            <Tooltip id='from_tooltip'/>
-        </div>
+        <From params={params} setParams={setParams} tooltip='from.helper.sms'/>
 
         <div data-for='foreign_id_tooltip'
-             data-tip='A custom identifier returned in DLR callbacks. Max. 64 chars, allowed characters: a-z, A-Z, 0-9, .-_@'>
-            <Label htmlFor='foreign_id'>Foreign ID</Label>
+             data-tip={formatMessage({id: getTrad('foreignId.tooltip')})}>
+            <Label
+                htmlFor='foreign_id'>{formatMessage({id: getTrad('foreignId')})}</Label>
             <InputText
                 id='foreign_id'
                 maxlength={FOREIGN_ID_MAX_LENGTH}
@@ -76,8 +61,9 @@ export default function Sms() {
         </div>
 
         <div data-for='label_tooltip'
-             data-tip='A custom label for assigning it to your statistics. Max. 100 chars, allowed characters: a-z, A-Z, 0-9, .-_@'>
-            <Label htmlFor='label'>Label</Label>
+             data-tip={formatMessage({id: getTrad('label.tooltip')})}>
+            <Label
+                htmlFor='label'>{formatMessage({id: getTrad('label')})}</Label>
             <InputText
                 id='label'
                 maxlength={LABEL_MAX_LENGTH}
@@ -89,8 +75,9 @@ export default function Sms() {
         </div>
 
         <div data-for='ttl_tooltip'
-             data-tip='Specifies the validity period of the SMS in minutes - defaults to 2880 (48 hours)'>
-            <Label htmlFor='ttl'>TTL</Label>
+             data-tip={formatMessage({id: getTrad('ttl.tooltip')})}>
+            <Label
+                htmlFor='ttl'>{formatMessage({id: getTrad('ttl')})}</Label>
             <InputNumber
                 id='ttl'
                 name='ttl'
@@ -102,16 +89,13 @@ export default function Sms() {
 
         <Flex alignItems='center' justifyContent='space-between'>
             <div data-for='delay_tooltip'
-                 data-tip='Pick a date and time for time-delayed SMS sending'>
-                <Label htmlFor='delay'>Delay</Label>
+                 data-tip={formatMessage({id: getTrad('delay.tooltip')})}>
+                <Label
+                    htmlFor='delay'>{formatMessage({id: getTrad('delay')})}</Label>
                 <DateTime
                     id='delay'
                     name='delay'
-                    onChange={e => {
-
-
-                        setParams({...params, delay: e.target.value})
-                    }}
+                    onChange={e => setParams({...params, delay: e.target.value})}
                     value={params.delay}
                 />
                 <Tooltip id='delay_tooltip'/>
@@ -120,8 +104,8 @@ export default function Sms() {
             <Debug params={params} setParams={setParams}/>
 
             <div data-for='flash_tooltip'
-                 data-tip='Send Flash SMS directly displayed in the receivers display'>
-                <Label htmlFor='flash'>Flash</Label>
+                 data-tip={formatMessage({id: getTrad('flash.tooltip')})}>
+                <Label htmlFor='flash'>{formatMessage({id: getTrad('flash')})}</Label>
                 <Toggle
                     id='flash'
                     name='flash'
@@ -132,8 +116,9 @@ export default function Sms() {
             </div>
 
             <div data-for='no_reload_tooltip'
-                 data-tip='Switch off reload lock to prevent sending duplicate SMS (text, type and recipient alike) within 180 seconds. Can be permanently deactivated in your login under Settings > SMS'>
-                <Label htmlFor='no_reload'>No Reload</Label>
+                 data-tip={formatMessage({id: getTrad('noReload.tooltip')})}>
+                <Label
+                    htmlFor='no_reload'>{formatMessage({id: getTrad('noReload')})}</Label>
                 <Toggle
                     id='no_reload'
                     name='no_reload'
@@ -144,8 +129,9 @@ export default function Sms() {
             </div>
 
             <div data-for='performance_tracking_tooltip'
-                 data-tip='Enable Performance Tracking for URLs found in the message text'>
-                <Label htmlFor='performance_tracking'>Performance Tracking</Label>
+                 data-tip={formatMessage({id: getTrad('performanceTracking.tooltip')})}>
+                <Label htmlFor='performance_tracking'>
+                    {formatMessage({id: getTrad('performanceTracking')})}</Label>
                 <Toggle
                     id='performance_tracking'
                     name='performance_tracking'
@@ -159,14 +145,6 @@ export default function Sms() {
             </div>
         </Flex>
 
-        <Label htmlFor='text'>Text</Label>
-        <Textarea
-            id='text'
-            maxlength={1520}
-            name='text'
-            onChange={e => setParams({...params, text: e.target.value})}
-            required
-            value={params.text}
-        />
+        <Text setParams={setParams} params={params} maxlength={1520}/>
     </>
 }

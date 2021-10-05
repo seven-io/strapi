@@ -1,14 +1,19 @@
 import React, {useState} from 'react'
-import {Flex, InputText, Label, Textarea, Toggle,} from '@buffetjs/core'
+import {useIntl} from 'react-intl'
+import {Flex, Label, Toggle,} from '@buffetjs/core'
 import {Tooltip} from '@buffetjs/styles'
 import {Header} from '@buffetjs/custom'
 import {defaultFilters, defaultVoiceParams, routes} from '../../../constants'
-import {FROM_NUMERIC_MAX} from 'sms77-client/dist/validators/request/sms'
-import Filters from './Filters'
-import {Debug} from './Debug'
+import Filters from '../components/Filters'
+import {Debug} from '../components/Debug'
 import {AdminUtil} from '../AdminUtil'
+import getTrad from '../utils/getTrad'
+import {To} from '../components/To'
+import {From} from '../components/From'
+import {Text} from '../components/Text'
 
 export default function Voice() {
+    const {formatMessage} = useIntl()
     const [params, setParams] = useState(defaultVoiceParams)
     const [filters, setFilters] = useState(defaultFilters)
 
@@ -21,47 +26,26 @@ export default function Voice() {
             actions={[
                 {
                     color: 'success',
-                    label: 'Send',
+                    label: formatMessage({id: getTrad('send')}),
                     onClick: handleSubmit,
                 },
             ]}
-            content='Make text-to-speech calls via sms77.io.'
-            title={{label: 'Text-to-Speech'}}
+            content={formatMessage({id: getTrad('tts.helper')})}
+            title={{label: formatMessage({id: getTrad('tts')})}}
         />
 
         <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters}/>
 
-        <div data-for='to_tooltip'
-             data-tip='Recipient number(s) – multiple recipients can be specified separated by commas. If specified, no users will get fetched from the collection'>
-            <Label htmlFor='to'>Recipient(s)</Label>
-            <InputText
-                id='to'
-                name='to'
-                onChange={e => setParams({...params, to: e.target.value})}
-                value={params.to}
-            />
-            <Tooltip id='to_tooltip'/>
-        </div>
+        <To params={params} setParams={setParams}/>
 
-        <div data-for='from_tooltip'
-             data-tip='Sender number - must be verified or a shared inbound number from sms77'>
-            <Label htmlFor='from'>From</Label>
-            <InputText
-                id='from'
-                maxlength={FROM_NUMERIC_MAX}
-                name='from'
-                onChange={e => setParams({...params, from: e.target.value})}
-                value={params.from}
-            />
-            <Tooltip id='from_tooltip'/>
-        </div>
+        <From params={params} setParams={setParams} tooltip='from.helper.tts'/>
 
         <Flex alignItems='center' justifyContent='space-between'>
             <Debug params={params} setParams={setParams}/>
 
             <div data-for='xml_tooltip'
-                 data-tip='Enable if text is of XML format'>
-                <Label htmlFor='xml'>XML?</Label>
+                 data-tip={formatMessage({id: getTrad('xml.tooltip')})}>
+                <Label htmlFor='xml'>XML</Label>
                 <Toggle
                     id='xml'
                     name='xml'
@@ -72,14 +56,6 @@ export default function Voice() {
             </div>
         </Flex>
 
-        <Label htmlFor='text'>Text</Label>
-        <Textarea
-            id='text'
-            maxlength={10000}
-            name='text'
-            onChange={e => setParams({...params, text: e.target.value})}
-            required
-            value={params.text}
-        />
+        <Text setParams={setParams} params={params} maxlength={10000}/>
     </>
 }

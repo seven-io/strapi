@@ -1,5 +1,4 @@
-const {settingsKeys} = require('../../constants');
-const {defaultSettings, phoneAttribute} = require('../../constants');
+const {defaultSettings, phoneAttribute, settingsKeys} = require('../../constants');
 
 module.exports = async () => {
     if (-1 === Object.keys(strapi.plugins).indexOf('users-permissions')) {

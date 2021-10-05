@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from 'react'
+import {useIntl} from 'react-intl'
 import {Label, Select,} from '@buffetjs/core'
 import {request} from 'strapi-helper-plugin'
 import {defaultFilters, routes} from '../../../constants'
+import getTrad from '../utils/getTrad'
 
 export default function Filters({disabled, filters, setFilters}) {
+    const {formatMessage} = useIntl()
     const [filterValues, setFilterValues] = useState(defaultFilters)
 
     useEffect(() => {
@@ -18,10 +21,10 @@ export default function Filters({disabled, filters, setFilters}) {
 
     return <section>
         <h2>
-            Filters - <small>not applied if field "To" is set.</small>
+            {formatMessage({id: getTrad('filters')})} - <small>{formatMessage({id: getTrad('filters.helper')})}.</small>
         </h2>
 
-        <Label htmlFor='filter_role'>Role</Label>
+        <Label htmlFor='filter_role'>{formatMessage({id: getTrad('role')})}</Label>
 
         <Select
             disabled={disabled}
