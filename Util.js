@@ -77,8 +77,6 @@ module.exports = class Util {
             }
         }
 
-        values.unshift({label: `All (${total})`, value: 0})
-
         return values
     }
 

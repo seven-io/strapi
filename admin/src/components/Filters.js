@@ -13,7 +13,18 @@ export default function Filters({disabled, filters, setFilters}) {
         (async () => {
             strapi.lockApp()
 
-            setFilterValues(await request(routes.BulkFilters))
+            const values = await request(routes.BulkFilters)
+
+            let totalRoles = 0
+            for (const role of values.roles)
+                totalRoles += Number.parseInt(role.label.match(/\d+/)[0])
+
+            values.roles.unshift({
+                label: `${formatMessage({id: getTrad('all')})} (${totalRoles})`,
+                value: 0
+            })
+
+            setFilterValues(values)
 
             strapi.unlockApp()
         })()

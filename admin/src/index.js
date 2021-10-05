@@ -4,6 +4,7 @@ import App from './containers/App';
 import Initializer from './containers/Initializer';
 import trads from './translations';
 import {routes} from '../../constants';
+import getTrad from './utils/getTrad'
 
 export const pluginId = 'sms77'
 
@@ -30,7 +31,7 @@ export default strapi => strapi.registerPlugin({
                 icon,
                 label: {
                     defaultMessage: name,
-                    id: 'sms77.plugin.name',
+                    id: getTrad('plugin.name'),
                 },
                 name,
             },

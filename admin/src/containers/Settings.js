@@ -45,12 +45,12 @@ export default () => { // TODO: wrap back in memo?!
                     onClick: () => window.location = `/admin/plugins${routes.Sms}`,
                 },
                 {
-                    label: 'Voice',
+                    label: formatMessage({id: getTrad('tts')}),
                     onClick: () => window.location = `/admin/plugins${routes.Voice}`,
                 },
                 {
                     color: 'success',
-                    label: 'Save',
+                    label: formatMessage({id: getTrad('save')}),
                     onClick: handleSubmit,
                 },
             ]}
