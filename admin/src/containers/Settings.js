@@ -55,7 +55,7 @@ export default () => { // TODO: wrap back in memo?!
                 },
             ]}
             content={formatMessage({id: getTrad('settings.helper')})}
-            title={{label: `sms77 ${formatMessage({id: getTrad('settings')})}`}}
+            title={{label: `seven ${formatMessage({id: getTrad('settings')})}`}}
         />
 
         <Label htmlFor='apiKey'>{formatMessage({id: getTrad('apiKey')})}</Label>

@@ -6,7 +6,7 @@ import trads from './translations';
 import {routes} from '../../constants';
 import getTrad from './utils/getTrad'
 
-export const pluginId = 'sms77'
+export const pluginId = 'seven'
 
 const icon = pkg.strapi.icon;
 const name = pkg.strapi.name;

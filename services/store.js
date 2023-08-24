@@ -12,7 +12,7 @@ async function setStoreKey(value) {
 
 module.exports = {
     store() {
-        return strapi.plugins.sms77.store;
+        return strapi.plugins.seven.store;
     },
     getStoreKey,
     setStoreKey,

@@ -6,7 +6,7 @@ export default function Initializer({ updatePlugin }) {
   ref.current = updatePlugin;
 
   useEffect(() => {
-    ref.current('sms77', 'isReady', true);
+    ref.current('seven', 'isReady', true);
   }, []);
 
   return null;

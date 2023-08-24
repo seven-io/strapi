@@ -25,11 +25,11 @@ module.exports = {
 
     async getSettings(ctx) {
         ctx.send(
-            await strapi.plugins.sms77.services.store.getStoreKey())
+            await strapi.plugins.seven.services.store.getStoreKey())
     },
 
     async setSettings(ctx) {
-        await strapi.plugins.sms77.services.store.setStoreKey(ctx.request.body)
+        await strapi.plugins.seven.services.store.setStoreKey(ctx.request.body)
 
         await this.getSettings(ctx)
     },

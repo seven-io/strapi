@@ -5,7 +5,7 @@
                 "description": "This renders the plugins home page",
                 "policies": []
             },
-            "handler": "sms77.index",
+            "handler": "seven.index",
             "method": "GET",
             "path": "/"
         },
@@ -14,7 +14,7 @@
                 "description": "This returns the bulk filters",
                 "policies": []
             },
-            "handler": "sms77.bulkFilters",
+            "handler": "seven.bulkFilters",
             "method": "GET",
             "path": "/bulk-filters"
         },
@@ -23,7 +23,7 @@
                 "description": "This gets the plugin settings",
                 "policies": []
             },
-            "handler": "sms77.getSettings",
+            "handler": "seven.getSettings",
             "method": "GET",
             "path": "/plugin-settings"
         },
@@ -32,7 +32,7 @@
                 "description": "This sets the plugin settings",
                 "policies": []
             },
-            "handler": "sms77.setSettings",
+            "handler": "seven.setSettings",
             "method": "POST",
             "path": "/plugin-settings"
         },
@@ -41,7 +41,7 @@
                 "description": "Get the email settings",
                 "policies": []
             },
-            "handler": "sms77.viewSettings",
+            "handler": "seven.viewSettings",
             "method": "GET",
             "path": "/settings"
         },
@@ -50,7 +50,7 @@
                 "description": "Send SMS",
                 "policies": []
             },
-            "handler": "sms77.sendSMS",
+            "handler": "seven.sendSMS",
             "method": "POST",
             "path": "/sms"
         },
@@ -59,7 +59,7 @@
                 "description": "Make text-to-speech calls",
                 "policies": []
             },
-            "handler": "sms77.sendVoice",
+            "handler": "seven.sendVoice",
             "method": "POST",
             "path": "/voice"
         }

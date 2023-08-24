@@ -1,7 +1,7 @@
 'use strict'
 
 const fetch = require('node-fetch')
-const Sms77Client = require('sms77-client')
+const SevenCLient = require('sms77-client')
 const {phoneAttribute} = require('./constants')
 
 if (!globalThis.fetch) globalThis.fetch = fetch
@@ -9,7 +9,7 @@ if (!globalThis.fetch) globalThis.fetch = fetch
 module.exports = class Util {
     static async sendMessage(ctx, method) {
         const messages = []
-        const client = await Util.initSms77Client()
+        const client = await Util.initSevenClient()
         const params = {...await Util.findUserPhonesByRoles(ctx), json: true}
         const isToArray = Array.isArray(params.to)
         const requests = []
@@ -35,7 +35,7 @@ module.exports = class Util {
     }
 
     static async getApiKey() {
-        return (await strapi.plugins.sms77.services.store.getStoreKey()).apiKey
+        return (await strapi.plugins.seven.services.store.getStoreKey()).apiKey
     }
 
     static async findUserPhonesByRoles(ctx) {
@@ -85,7 +85,7 @@ module.exports = class Util {
             .find(role ? {_limit: -1, role} : {})
     }
 
-    static async initSms77Client() {
-        return new Sms77Client(await Util.getApiKey(), 'strapi')
+    static async initSevenClient() {
+        return new SevenCLient(await Util.getApiKey(), 'strapi')
     }
 }

@@ -1,12 +1,12 @@
 {
     "author": {
-        "name": "sms77 e.K.",
-        "email": "support@sms77.io",
-        "url": "https://www.sms77.io"
+        "name": "seven communications GmbH & Co. KG",
+        "email": "support@seven.io",
+        "url": "https://www.seven.io"
     },
     "bugs": {
-        "email": "a.matthies@sms77.io",
-        "url": "https://github.com/sms77io/strapi/issues"
+        "email": "support@seven.io",
+        "url": "https://github.com/seven-io/strapi/issues"
     },
     "dependencies": {
         "node-fetch": "^2.6.5",
@@ -14,12 +14,12 @@
         "strapi-helper-plugin": "^3.6.8",
         "react-intl": "^4.5.0"
     },
-    "description": "Strapi plugin for sending SMS and making text-to-speech calls via sms77.",
+    "description": "Strapi plugin for sending SMS and making text-to-speech calls via seven.",
     "engines": {
         "node": ">=10.16.0 <=14.x.x",
         "npm": ">=6.0.0"
     },
-    "homepage": "https://github.com/sms77io/strapi",
+    "homepage": "https://github.com/seven-io/strapi",
     "keywords": [
         "gateway",
         "plugin",
@@ -29,20 +29,20 @@
     "license": "MIT",
     "maintainers": [
         {
-            "email": "support@sms77.io",
-            "name": "sms77 e.K.",
-            "url": "https://www.sms77.io"
+            "email": "support@seven.io",
+            "name": "seven communications GmbH & Co. KG",
+            "url": "https://www.seven.io"
         }
     ],
-    "name": "@sms77.io/strapi",
+    "name": "@seven.io/strapi",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/sms77io/strapi.git"
+        "url": "git+https://github.com/seven-io/strapi.git"
     },
     "strapi": {
-        "description": "Send SMS and make text-to-speech calls via sms77.",
+        "description": "Send SMS and make text-to-speech calls via seven.",
         "icon": "plug",
-        "name": "sms77",
+        "name": "seven",
         "required": false
     },
     "version": "0.2.0"
