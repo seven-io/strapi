@@ -1,8 +1,6 @@
 {
     "all": "All",
     "apiKey": "API Key",
-    "debug": "Debug",
-    "debug.tooltip": "No message will be sent or calculated if activated",
     "delay": "Delay",
     "delay.tooltip": "Pick a date and time for time-delayed SMS sending",
     "filters": "Filters",

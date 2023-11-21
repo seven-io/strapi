@@ -5,7 +5,6 @@ import {Tooltip} from '@buffetjs/styles'
 import {Header} from '@buffetjs/custom'
 import {defaultFilters, defaultVoiceParams, routes} from '../../../constants'
 import Filters from '../components/Filters'
-import {Debug} from '../components/Debug'
 import {AdminUtil} from '../AdminUtil'
 import getTrad from '../utils/getTrad'
 import {To} from '../components/To'
@@ -41,8 +40,6 @@ export default function Voice() {
         <From params={params} setParams={setParams} tooltip='from.helper.tts'/>
 
         <Flex alignItems='center' justifyContent='space-between'>
-            <Debug params={params} setParams={setParams}/>
-
             <div data-for='xml_tooltip'
                  data-tip={formatMessage({id: getTrad('xml.tooltip')})}>
                 <Label htmlFor='xml'>XML</Label>

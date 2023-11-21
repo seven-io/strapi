@@ -8,7 +8,6 @@ import {
     LABEL_MAX_LENGTH
 } from 'sms77-client/dist/validators/request/sms'
 import Util from '../../../Util'
-import {Debug} from '../components/Debug'
 import {defaultFilters, defaultSmsParams, routes} from '../../../constants'
 import Filters from '../components/Filters'
 import {AdminUtil} from '../AdminUtil'
@@ -100,8 +99,6 @@ export default function Sms() {
                 />
                 <Tooltip id='delay_tooltip'/>
             </div>
-
-            <Debug params={params} setParams={setParams}/>
 
             <div data-for='flash_tooltip'
                  data-tip={formatMessage({id: getTrad('flash.tooltip')})}>

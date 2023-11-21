@@ -1,8 +1,6 @@
 {
     "all": "Alle",
     "apiKey": "API-Schlüssel",
-    "debug": "Debug",
-    "debug.tooltip": "Keine Nachrichten werden versendet und berechnet",
     "delay": "Versandzeitpunkt",
     "delay.tooltip": "Datum wählen für zeitverzögerten SMS-Versand",
     "filters": "Filter",

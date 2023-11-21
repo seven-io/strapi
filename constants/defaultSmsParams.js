@@ -1,5 +1,4 @@
 module.exports = {
-    debug: false,
     delay: null,
     flash: false,
     foreign_id: '',

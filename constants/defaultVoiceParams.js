@@ -1,5 +1,4 @@
 module.exports = {
-    debug: false,
     from: '',
     text: '',
     to: '',
