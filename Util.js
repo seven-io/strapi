@@ -7,10 +7,10 @@ const {phoneAttribute} = require('./constants')
 if (!globalThis.fetch) globalThis.fetch = fetch
 
 module.exports = class Util {
-    static async sendMessage(ctx, method) {
+    static async sendMessage(ctx, method, strapi) {
         const messages = []
-        const client = await Util.initSevenClient()
-        const params = {...await Util.findUserPhonesByRoles(ctx), json: true}
+        const client = await Util.initSevenClient(strapi)
+        const params = {...await Util.findUserPhonesByRoles(ctx, strapi), json: true}
         const isToArray = Array.isArray(params.to)
         const requests = []
 
@@ -34,17 +34,17 @@ module.exports = class Util {
         ctx.send({message: messages.join('\n')})
     }
 
-    static async getApiKey() {
-        return (await strapi.plugins.seven.services.store.getStoreKey()).apiKey
+    static async getApiKey(strapi) {
+        return (await strapi.plugin('seven').service('store').getStoreKey()).apiKey
     }
 
-    static async findUserPhonesByRoles(ctx) {
+    static async findUserPhonesByRoles(ctx, strapi) {
         const {filters, params} = ctx.request.body
 
         if ('' === params.to) {
             const to = []
 
-            for (const user of await Util.findUsersByRole(filters.role)) {
+            for (const user of await Util.findUsersByRole(filters.role, strapi)) {
 
                 if ('' === (user[phoneAttribute] || '')) continue
 
@@ -61,14 +61,14 @@ module.exports = class Util {
         return (new Date(new Date(dateTime).toLocaleString(locale)).valueOf()) / 1000
     }
 
-    static async getRoles() {
+    static async getRoles(strapi) {
         const values = []
         let total = 0
 
-        for (const {id, name} of await strapi.query('role', 'users-permissions')
-            .find({_limit: -1})) {
-            const count = await strapi.query('user', 'users-permissions')
-                .count({role: [id]})
+        for (const {id, name} of await strapi.documents('plugin::users-permissions.role')
+            .findMany()) {
+            const count = await strapi.documents('plugin::users-permissions.user')
+                .count({filters: {role: {id: id}}})
 
             if (0 !== count) {
                 total += count
@@ -80,12 +80,12 @@ module.exports = class Util {
         return values
     }
 
-    static async findUsersByRole(role) {
-        return await strapi.query('user', 'users-permissions')
-            .find(role ? {_limit: -1, role} : {})
+    static async findUsersByRole(role, strapi) {
+        return await strapi.documents('plugin::users-permissions.user')
+            .findMany(role ? {filters: {role: {id: role}}} : {})
     }
 
-    static async initSevenClient() {
-        return new SevenCLient(await Util.getApiKey(), 'strapi')
+    static async initSevenClient(strapi) {
+        return new SevenCLient(await Util.getApiKey(strapi), 'strapi')
     }
 }

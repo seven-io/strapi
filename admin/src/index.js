@@ -1,43 +1,41 @@
 import React from 'react';
+import { Plug } from '@strapi/icons';
 import pkg from '../../package.json';
 import App from './containers/App';
-import Initializer from './containers/Initializer';
 import trads from './translations';
-import {routes} from '../../constants';
-import getTrad from './utils/getTrad'
+import { routes } from '../../constants';
+import getTrad from './utils/getTrad';
 
-export const pluginId = 'seven'
-
-const icon = pkg.strapi.icon;
+const pluginId = 'seven';
 const name = pkg.strapi.name;
 
-export default strapi => strapi.registerPlugin({
-    blockerComponent: null,
-    blockerComponentProps: {},
-    description: pkg.strapi.description || pkg.description,
-    icon,
-    id: pluginId,
-    initializer: Initializer,
-    injectedComponents: [],
-    isReady: false,
-    isRequired: pkg.strapi.required || false,
-    layout: null,
-    lifecycles: () => {},
-    mainComponent: App,
-    menu: {
-        pluginsSectionLinks: [
-            {
-                destination: `/plugins${routes.Index}`,
-                icon,
-                label: {
-                    defaultMessage: name,
-                    id: getTrad('plugin.name'),
-                },
-                name,
-            },
-        ],
-    },
-    name,
-    preventComponentRendering: false,
-    trads,
-})
+const admin = {
+  app: {
+    intlMessagePrefixes: ['seven', 'global'],
+  },
+  
+  bootstrap() {},
+  
+  register(app) {
+    app.addMenuLink({
+      to: `/plugins${routes.Index}`,
+      icon: Plug,
+      intlLabel: {
+        id: getTrad('plugin.name'),
+        defaultMessage: name,
+      },
+      permissions: [],
+      Component: async () => {
+        const component = await import('./containers/App');
+        return component;
+      },
+    });
+
+    app.registerPlugin({
+      id: pluginId,
+      name: name,
+    });
+  },
+};
+
+export default admin;
