@@ -1,147 +1,197 @@
-import React, {useState} from 'react'
-import {useIntl} from 'react-intl'
-import {Flex, InputNumber, InputText, Label, Toggle,} from '@buffetjs/core'
-import {Tooltip} from '@buffetjs/styles'
-import {DateTime, Header} from '@buffetjs/custom'
+import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
 import {
-    FOREIGN_ID_MAX_LENGTH,
-    LABEL_MAX_LENGTH
-} from 'sms77-client/dist/validators/request/sms'
-import Util from '../../../Util'
-import {defaultFilters, defaultSmsParams, routes} from '../../../constants'
-import Filters from '../components/Filters'
-import {AdminUtil} from '../AdminUtil'
-import getTrad from '../utils/getTrad'
-import {To} from '../components/To'
-import {From} from '../components/From'
-import {Text} from '../components/Text'
+  Layout,
+  HeaderLayout,
+  ContentLayout,
+  Main,
+  Box,
+  Button,
+  TextInput,
+  NumberInput,
+  Toggle,
+  Typography,
+  Grid,
+  GridItem,
+  Textarea
+} from '@strapi/design-system';
+import { PaperPlane } from '@strapi/icons';
+import { request, useNotification } from '@strapi/helper-plugin';
+import { defaultFilters, defaultSmsParams } from '../../../constants';
+import getTrad from '../utils/getTrad';
+import Filters from '../components/Filters';
+import { To } from '../components/To';
+import { From } from '../components/From';
 
 export default function Sms() {
-    const {formatMessage} = useIntl()
-    const [params, setParams] = useState(defaultSmsParams)
-    const [filters, setFilters] = useState(defaultFilters)
+  const { formatMessage } = useIntl();
+  const [params, setParams] = useState(defaultSmsParams);
+  const [filters, setFilters] = useState(defaultFilters);
+  const [isLoading, setIsLoading] = useState(false);
+  const toggleNotification = useNotification();
 
-    const handleSubmit = async () => {
-        if (params.delay) params.delay = Util.toLocaleTimestamp(params.delay._d)
-        await AdminUtil.handleSubmitMessage(routes.Sms, {filters, params})
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      
+      const response = await request('/seven/sms', {
+        method: 'POST',
+        body: { filters, params },
+      });
+
+      toggleNotification({
+        type: 'success',
+        message: 'SMS sent successfully!'
+      });
+    } catch (error) {
+      console.error('Failed to send SMS:', error);
+      toggleNotification({
+        type: 'warning',
+        message: 'Failed to send SMS'
+      });
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return <>
-        <Header
-            actions={[
-                {
-                    color: 'success',
-                    label: formatMessage({id: getTrad('send')}),
-                    onClick: handleSubmit,
-                },
-            ]}
-            content={formatMessage({id: getTrad('sms.helper')})}
-            title={{label: 'SMS'}}
+  return (
+    <Layout>
+      <Main>
+        <HeaderLayout
+          title="Send SMS"
+          subtitle={formatMessage({ id: getTrad('sms.helper') })}
+          primaryAction={
+            <Button
+              onClick={handleSubmit}
+              startIcon={<PaperPlane />}
+              size="L"
+              disabled={isLoading || !params.text}
+              loading={isLoading}
+            >
+              {formatMessage({ id: getTrad('send') })}
+            </Button>
+          }
         />
+        <ContentLayout>
+          <Box
+            background="neutral0"
+            hasRadius
+            shadow="filterShadow"
+            paddingTop={6}
+            paddingBottom={6}
+            paddingLeft={7}
+            paddingRight={7}
+          >
+            <Box paddingBottom={6}>
+              <Typography variant="delta" as="h2">
+                Recipients & Content
+              </Typography>
+            </Box>
 
-        <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters}/>
+            <Grid gap={4}>
+              <GridItem col={12}>
+                <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters} />
+              </GridItem>
+              
+              <GridItem col={6}>
+                <To params={params} setParams={setParams} />
+              </GridItem>
+              
+              <GridItem col={6}>
+                <From params={params} setParams={setParams} tooltip="from.helper.sms" />
+              </GridItem>
 
-        <To params={params} setParams={setParams}/>
-
-        <From params={params} setParams={setParams} tooltip='from.helper.sms'/>
-
-        <div data-for='foreign_id_tooltip'
-             data-tip={formatMessage({id: getTrad('foreignId.tooltip')})}>
-            <Label
-                htmlFor='foreign_id'>{formatMessage({id: getTrad('foreignId')})}</Label>
-            <InputText
-                id='foreign_id'
-                maxlength={FOREIGN_ID_MAX_LENGTH}
-                name='foreign_id'
-                onChange={e => setParams({...params, foreign_id: e.target.value})}
-                value={params.foreign_id}
-            />
-            <Tooltip id='foreign_id_tooltip'/>
-        </div>
-
-        <div data-for='label_tooltip'
-             data-tip={formatMessage({id: getTrad('label.tooltip')})}>
-            <Label
-                htmlFor='label'>{formatMessage({id: getTrad('label')})}</Label>
-            <InputText
-                id='label'
-                maxlength={LABEL_MAX_LENGTH}
-                name='label'
-                onChange={e => setParams({...params, label: e.target.value})}
-                value={params.label}
-            />
-            <Tooltip id='label_tooltip'/>
-        </div>
-
-        <div data-for='ttl_tooltip'
-             data-tip={formatMessage({id: getTrad('ttl.tooltip')})}>
-            <Label
-                htmlFor='ttl'>{formatMessage({id: getTrad('ttl')})}</Label>
-            <InputNumber
-                id='ttl'
-                name='ttl'
-                onChange={e => setParams({...params, ttl: e.target.value})}
-                value={params.ttl}
-            />
-            <Tooltip id='ttl_tooltip'/>
-        </div>
-
-        <Flex alignItems='center' justifyContent='space-between'>
-            <div data-for='delay_tooltip'
-                 data-tip={formatMessage({id: getTrad('delay.tooltip')})}>
-                <Label
-                    htmlFor='delay'>{formatMessage({id: getTrad('delay')})}</Label>
-                <DateTime
-                    id='delay'
-                    name='delay'
-                    onChange={e => setParams({...params, delay: e.target.value})}
-                    value={params.delay}
+              <GridItem col={12}>
+                <Textarea
+                  placeholder="Enter your SMS message"
+                  label={formatMessage({ id: getTrad('text') })}
+                  name="text"
+                  onChange={(e) => setParams({ ...params, text: e.target.value })}
+                  value={params.text || ''}
+                  required
                 />
-                <Tooltip id='delay_tooltip'/>
-            </div>
+              </GridItem>
 
-            <div data-for='flash_tooltip'
-                 data-tip={formatMessage({id: getTrad('flash.tooltip')})}>
-                <Label htmlFor='flash'>{formatMessage({id: getTrad('flash')})}</Label>
+              <GridItem col={6}>
+                <TextInput
+                  placeholder="Enter foreign ID"
+                  label={formatMessage({ id: getTrad('foreignId') })}
+                  hint={formatMessage({ id: getTrad('foreignId.tooltip') })}
+                  name="foreign_id"
+                  onChange={(e) => setParams({ ...params, foreign_id: e.target.value })}
+                  value={params.foreign_id || ''}
+                />
+              </GridItem>
+
+              <GridItem col={6}>
+                <TextInput
+                  placeholder="Enter label"
+                  label={formatMessage({ id: getTrad('label') })}
+                  hint={formatMessage({ id: getTrad('label.tooltip') })}
+                  name="label"
+                  onChange={(e) => setParams({ ...params, label: e.target.value })}
+                  value={params.label || ''}
+                />
+              </GridItem>
+
+              <GridItem col={6}>
+                <NumberInput
+                  placeholder="2880"
+                  label={formatMessage({ id: getTrad('ttl') })}
+                  hint={formatMessage({ id: getTrad('ttl.tooltip') })}
+                  name="ttl"
+                  onValueChange={(value) => setParams({ ...params, ttl: value })}
+                  value={params.ttl || ''}
+                />
+              </GridItem>
+
+              <GridItem col={6}>
+                <Box paddingTop={4}>
+                  <Typography variant="pi" fontWeight="bold" as="label">
+                    Options
+                  </Typography>
+                </Box>
+              </GridItem>
+
+              <GridItem col={3}>
                 <Toggle
-                    id='flash'
-                    name='flash'
-                    onChange={e => setParams({...params, flash: e.target.value})}
-                    value={params.flash}
+                  label={formatMessage({ id: getTrad('flash') })}
+                  hint={formatMessage({ id: getTrad('flash.tooltip') })}
+                  name="flash"
+                  onLabel="On"
+                  offLabel="Off"
+                  checked={params.flash || false}
+                  onChange={(e) => setParams({ ...params, flash: e.target.checked })}
                 />
-                <Tooltip id='flash_tooltip'/>
-            </div>
+              </GridItem>
 
-            <div data-for='no_reload_tooltip'
-                 data-tip={formatMessage({id: getTrad('noReload.tooltip')})}>
-                <Label
-                    htmlFor='no_reload'>{formatMessage({id: getTrad('noReload')})}</Label>
+              <GridItem col={3}>
                 <Toggle
-                    id='no_reload'
-                    name='no_reload'
-                    onChange={e => setParams({...params, no_reload: e.target.value})}
-                    value={params.no_reload}
+                  label={formatMessage({ id: getTrad('noReload') })}
+                  hint={formatMessage({ id: getTrad('noReload.tooltip') })}
+                  name="no_reload"
+                  onLabel="On"
+                  offLabel="Off"
+                  checked={params.no_reload || false}
+                  onChange={(e) => setParams({ ...params, no_reload: e.target.checked })}
                 />
-                <Tooltip id='no_reload_tooltip'/>
-            </div>
+              </GridItem>
 
-            <div data-for='performance_tracking_tooltip'
-                 data-tip={formatMessage({id: getTrad('performanceTracking.tooltip')})}>
-                <Label htmlFor='performance_tracking'>
-                    {formatMessage({id: getTrad('performanceTracking')})}</Label>
+              <GridItem col={6}>
                 <Toggle
-                    id='performance_tracking'
-                    name='performance_tracking'
-                    onChange={e => setParams({
-                        ...params,
-                        performance_tracking: e.target.value
-                    })}
-                    value={params.performance_tracking}
+                  label={formatMessage({ id: getTrad('performanceTracking') })}
+                  hint={formatMessage({ id: getTrad('performanceTracking.tooltip') })}
+                  name="performance_tracking"
+                  onLabel="On"
+                  offLabel="Off"
+                  checked={params.performance_tracking || false}
+                  onChange={(e) => setParams({ ...params, performance_tracking: e.target.checked })}
                 />
-                <Tooltip id='performance_tracking_tooltip'/>
-            </div>
-        </Flex>
-
-        <Text setParams={setParams} params={params} maxlength={1520}/>
-    </>
+              </GridItem>
+            </Grid>
+          </Box>
+        </ContentLayout>
+      </Main>
+    </Layout>
+  );
 }

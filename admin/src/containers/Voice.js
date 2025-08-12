@@ -1,58 +1,130 @@
-import React, {useState} from 'react'
-import {useIntl} from 'react-intl'
-import {Flex, Label, Toggle,} from '@buffetjs/core'
-import {Tooltip} from '@buffetjs/styles'
-import {Header} from '@buffetjs/custom'
-import {defaultFilters, defaultVoiceParams, routes} from '../../../constants'
-import Filters from '../components/Filters'
-import {AdminUtil} from '../AdminUtil'
-import getTrad from '../utils/getTrad'
-import {To} from '../components/To'
-import {From} from '../components/From'
-import {Text} from '../components/Text'
+import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
+import {
+  Layout,
+  HeaderLayout,
+  ContentLayout,
+  Main,
+  Box,
+  Button,
+  Toggle,
+  Typography,
+  Grid,
+  GridItem,
+  Textarea
+} from '@strapi/design-system';
+import { Phone } from '@strapi/icons';
+import { request, useNotification } from '@strapi/helper-plugin';
+import { defaultFilters, defaultVoiceParams } from '../../../constants';
+import getTrad from '../utils/getTrad';
+import Filters from '../components/Filters';
+import { To } from '../components/To';
+import { From } from '../components/From';
 
 export default function Voice() {
-    const {formatMessage} = useIntl()
-    const [params, setParams] = useState(defaultVoiceParams)
-    const [filters, setFilters] = useState(defaultFilters)
+  const { formatMessage } = useIntl();
+  const [params, setParams] = useState(defaultVoiceParams);
+  const [filters, setFilters] = useState(defaultFilters);
+  const [isLoading, setIsLoading] = useState(false);
+  const toggleNotification = useNotification();
 
-    const handleSubmit = async () => {
-        await AdminUtil.handleSubmitMessage(routes.Voice, {filters, params})
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      
+      const response = await request('/seven/voice', {
+        method: 'POST',
+        body: { filters, params },
+      });
+
+      toggleNotification({
+        type: 'success',
+        message: 'Voice call initiated successfully!'
+      });
+    } catch (error) {
+      console.error('Failed to send voice message:', error);
+      toggleNotification({
+        type: 'warning',
+        message: 'Failed to initiate voice call'
+      });
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return <>
-        <Header
-            actions={[
-                {
-                    color: 'success',
-                    label: formatMessage({id: getTrad('send')}),
-                    onClick: handleSubmit,
-                },
-            ]}
-            content={formatMessage({id: getTrad('tts.helper')})}
-            title={{label: formatMessage({id: getTrad('tts')})}}
+  return (
+    <Layout>
+      <Main>
+        <HeaderLayout
+          title={formatMessage({ id: getTrad('tts') })}
+          subtitle={formatMessage({ id: getTrad('tts.helper') })}
+          primaryAction={
+            <Button
+              onClick={handleSubmit}
+              startIcon={<Phone />}
+              size="L"
+              disabled={isLoading || !params.text}
+              loading={isLoading}
+            >
+              {formatMessage({ id: getTrad('send') })}
+            </Button>
+          }
         />
+        <ContentLayout>
+          <Box
+            background="neutral0"
+            hasRadius
+            shadow="filterShadow"
+            paddingTop={6}
+            paddingBottom={6}
+            paddingLeft={7}
+            paddingRight={7}
+          >
+            <Box paddingBottom={6}>
+              <Typography variant="delta" as="h2">
+                Recipients & Content
+              </Typography>
+            </Box>
 
-        <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters}/>
+            <Grid gap={4}>
+              <GridItem col={12}>
+                <Filters disabled={'' !== params.to} filters={filters} setFilters={setFilters} />
+              </GridItem>
+              
+              <GridItem col={6}>
+                <To params={params} setParams={setParams} />
+              </GridItem>
+              
+              <GridItem col={6}>
+                <From params={params} setParams={setParams} tooltip="from.helper.tts" />
+              </GridItem>
 
-        <To params={params} setParams={setParams}/>
-
-        <From params={params} setParams={setParams} tooltip='from.helper.tts'/>
-
-        <Flex alignItems='center' justifyContent='space-between'>
-            <div data-for='xml_tooltip'
-                 data-tip={formatMessage({id: getTrad('xml.tooltip')})}>
-                <Label htmlFor='xml'>XML</Label>
-                <Toggle
-                    id='xml'
-                    name='xml'
-                    onChange={e => setParams({...params, xml: e.target.value})}
-                    value={params.xml}
+              <GridItem col={12}>
+                <Textarea
+                  placeholder="Enter your text-to-speech message"
+                  label={formatMessage({ id: getTrad('text') })}
+                  name="text"
+                  onChange={(e) => setParams({ ...params, text: e.target.value })}
+                  value={params.text || ''}
+                  required
                 />
-                <Tooltip id='xml_tooltip'/>
-            </div>
-        </Flex>
+              </GridItem>
 
-        <Text setParams={setParams} params={params} maxlength={10000}/>
-    </>
+              <GridItem col={6}>
+                <Toggle
+                  label="XML Format"
+                  hint={formatMessage({ id: getTrad('xml.tooltip') })}
+                  name="xml"
+                  onLabel="On"
+                  offLabel="Off"
+                  checked={params.xml || false}
+                  onChange={(e) => setParams({ ...params, xml: e.target.checked })}
+                />
+              </GridItem>
+            </Grid>
+          </Box>
+        </ContentLayout>
+      </Main>
+    </Layout>
+  );
 }

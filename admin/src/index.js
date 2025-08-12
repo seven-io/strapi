@@ -1,43 +1,54 @@
-import React from 'react';
-import pkg from '../../package.json';
-import App from './containers/App';
-import Initializer from './containers/Initializer';
-import trads from './translations';
-import {routes} from '../../constants';
-import getTrad from './utils/getTrad'
+import { prefixPluginTranslations } from '@strapi/helper-plugin';
+import { Cog } from '@strapi/icons';
+import pluginPkg from '../../package.json';
 
-export const pluginId = 'seven'
+const pluginId = 'seven';
 
-const icon = pkg.strapi.icon;
-const name = pkg.strapi.name;
+export default {
+  register(app) {
+    app.addMenuLink({
+      to: `/plugins/${pluginId}`,
+      icon: Cog,
+      intlLabel: {
+        id: `${pluginId}.plugin.name`,
+        defaultMessage: 'Seven',
+      },
+      Component: async () => {
+        const component = await import('./containers/App');
+        return component.default;
+      },
+      permissions: [],
+    });
+    
+    app.registerPlugin({
+      id: pluginId,
+      initializer: () => null,
+      isReady: true,
+      name: pluginPkg.strapi.name,
+    });
+  },
 
-export default strapi => strapi.registerPlugin({
-    blockerComponent: null,
-    blockerComponentProps: {},
-    description: pkg.strapi.description || pkg.description,
-    icon,
-    id: pluginId,
-    initializer: Initializer,
-    injectedComponents: [],
-    isReady: false,
-    isRequired: pkg.strapi.required || false,
-    layout: null,
-    lifecycles: () => {},
-    mainComponent: App,
-    menu: {
-        pluginsSectionLinks: [
-            {
-                destination: `/plugins${routes.Index}`,
-                icon,
-                label: {
-                    defaultMessage: name,
-                    id: getTrad('plugin.name'),
-                },
-                name,
-            },
-        ],
-    },
-    name,
-    preventComponentRendering: false,
-    trads,
-})
+  bootstrap() {},
+  
+  async registerTrads({ locales }) {
+    const importedTrads = await Promise.all(
+      locales.map(locale => {
+        return import(`./translations/${locale}.json`)
+          .then(({ default: data }) => {
+            return {
+              data: prefixPluginTranslations(data, pluginId),
+              locale,
+            };
+          })
+          .catch(() => {
+            return {
+              data: {},
+              locale,
+            };
+          });
+      })
+    );
+
+    return Promise.resolve(importedTrads);
+  },
+};

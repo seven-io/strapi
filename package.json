@@ -2,21 +2,36 @@
     "author": {
         "name": "seven communications GmbH & Co. KG",
         "email": "support@seven.io",
-        "url": "https://www.seven.io"
+        "url": "https://seven.io"
     },
     "bugs": {
         "email": "support@seven.io",
         "url": "https://github.com/seven-io/strapi/issues"
     },
     "dependencies": {
-        "node-fetch": "^2.6.5",
-        "sms77-client": "^2.12.1",
-        "strapi-helper-plugin": "^3.6.8",
-        "react-intl": "^4.5.0"
+        "node-fetch": "^3.3.2",
+        "sms77-client": "^2.12.1"
+    },
+    "devDependencies": {
+        "@strapi/design-system": "^1.19.0",
+        "@strapi/helper-plugin": "^4.25.0",
+        "@strapi/icons": "^1.19.0",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "react-intl": "^6.6.0",
+        "react-router-dom": "^5.3.4",
+        "styled-components": "^5.3.3"
+    },
+    "peerDependencies": {
+        "@strapi/strapi": "^4.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0",
+        "react-router-dom": "^5.2.0",
+        "styled-components": "^5.2.1"
     },
     "description": "Strapi plugin for sending SMS and making text-to-speech calls via seven.",
     "engines": {
-        "node": ">=10.16.0 <=14.x.x",
+        "node": ">=16.0.0 <=20.x.x",
         "npm": ">=6.0.0"
     },
     "homepage": "https://github.com/seven-io/strapi",
@@ -31,7 +46,7 @@
         {
             "email": "support@seven.io",
             "name": "seven communications GmbH & Co. KG",
-            "url": "https://www.seven.io"
+            "url": "https://seven.io"
         }
     ],
     "name": "@seven.io/strapi",
@@ -41,9 +56,10 @@
     },
     "strapi": {
         "description": "Send SMS and make text-to-speech calls via seven.",
+        "displayName": "Seven",
         "icon": "plug",
         "name": "seven",
-        "required": false
+        "kind": "plugin"
     },
-    "version": "0.2.0"
+    "version": "1.0.0"
 }

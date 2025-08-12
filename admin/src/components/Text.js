@@ -1,23 +1,19 @@
-import React from 'react'
-import {useIntl} from 'react-intl'
-import {Label, Textarea} from '@buffetjs/core'
-import getTrad from '../utils/getTrad'
+import React from 'react';
+import { useIntl } from 'react-intl';
+import { Textarea } from '@strapi/design-system';
+import getTrad from '../utils/getTrad';
 
-export function Text({maxlength, params, setParams}) {
-    const {formatMessage} = useIntl()
+export function Text({ maxlength, params, setParams }) {
+  const { formatMessage } = useIntl();
 
-    return <>
-        <Label htmlFor='text'>
-            {formatMessage({id: getTrad('text')})}
-        </Label>
-
-        <Textarea
-            id='text'
-            maxlength={maxlength}
-            name='text'
-            onChange={e => setParams({...params, text: e.target.value})}
-            required
-            value={params.text}
-        />
-    </>
+  return (
+    <Textarea
+      placeholder="Enter your message text"
+      label={formatMessage({ id: getTrad('text') })}
+      name="text"
+      onChange={(e) => setParams({ ...params, text: e.target.value })}
+      value={params.text || ''}
+      required
+    />
+  );
 }
