@@ -1,4 +1,4 @@
-<img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
+<img alt='' src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
 
 # Official package for [strapi](https://strapi.io/)
 
