@@ -12,7 +12,7 @@
         "node-fetch": "^2.6.5",
         "sms77-client": "^2.12.1",
         "strapi-helper-plugin": "^3.6.8",
-        "react-intl": "^4.5.0"
+        "react-intl": "^10.1.9"
     },
     "description": "Strapi plugin for sending SMS and making text-to-speech calls via seven.",
     "engines": {
